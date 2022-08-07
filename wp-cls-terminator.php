@@ -15,5 +15,3 @@
 
 define( 'WP_CLS_TERMINATOR_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WP_CLS_TERMINATOR_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
-
-$lps = array();
