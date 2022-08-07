@@ -1,0 +1,32 @@
+### WordPress ###
+
+# Core
+/wordpress/
+
+# macOS/IDE
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Log files
+*.log
+/tests/logs
+
+# Packages
+/vendor/
+/node_modules/
+
+# Enviroment
+.env
+
+# Build
+assets/build/
+
+# Cache
+.phpunit.result.cache
+
+# Configs
+/phpcs.xml
