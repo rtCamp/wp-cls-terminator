@@ -153,17 +153,3 @@ const calculate = ( html, breakpoint ) => {
         }, 10000 );
     } );
 }
-
-export const filterBlocksSave = ( element, blockType, attributes ) => {
-    if ( ! element ) {
-        return;
-    }
-
-    if ( blockType.name !== 'core/embed' ) {
-        return element;
-    }
-
-    console.log( attributes );
-
-    return element;
-}
