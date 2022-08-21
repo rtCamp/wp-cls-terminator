@@ -71,11 +71,10 @@ const styles = {
 const WPCLSTerminator = {
 	...sharedConfig,
 	entry: {
-		main: path.resolve( process.cwd(), 'assets', 'src', 'js', 'index.js' ),
+		'cls-terminator': path.resolve( process.cwd(), 'assets', 'src', 'js', 'index.js' ),
 	},
 };
 
 module.exports = [
 	WPCLSTerminator,
-	styles, // Do not remove this.
 ];
