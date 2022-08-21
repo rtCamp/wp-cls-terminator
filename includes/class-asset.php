@@ -30,5 +30,12 @@ class Assets {
 			$deps['dependencies'],
 			filemtime( WP_CLS_TERMINATOR_PATH . '/assets/build/js/cls-terminator.js' ),
 		);
+
+		wp_enqueue_style(
+			'wp-cls-terminator',
+			WP_CLS_TERMINATOR_URL . '/assets/build/css/cls-terminator.css',
+			array(),
+			filemtime( WP_CLS_TERMINATOR_PATH . '/assets/build/css/cls-terminator.css' )
+		);
 	}
 }
