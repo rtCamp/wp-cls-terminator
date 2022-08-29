@@ -1,6 +1,6 @@
-export const iframeMarkup = ( html ) => {
-    const name = 'embed-height-calculator';
-    const markup = `
+export const iframeMarkup = (html) => {
+	const name = 'embed-height-calculator';
+	const markup = `
     <!DOCTYPE html>
     <html>
     <head>
@@ -12,7 +12,7 @@ export const iframeMarkup = ( html ) => {
     </style>
     </head>
     <body>
-    <div>${ html }</div>
+    <div>${html}</div>
     <script>
     function watchForEmbedLoaded( container ) {
         const windowLoaded = new Promise( ( resolve ) => {
@@ -24,7 +24,7 @@ export const iframeMarkup = ( html ) => {
         return new Promise( ( resolve, reject ) => {
             const resolveWithResolution = () => {
                 resolve( {
-                    name: '${ name }',
+                    name: '${name}',
                     duration: new Date().valueOf() - startTime.valueOf(),
                     width: container.offsetWidth,
                     height: container.offsetHeight,
@@ -89,5 +89,5 @@ export const iframeMarkup = ( html ) => {
     </html>
 `;
 
-    return markup;
-}
+	return markup;
+};

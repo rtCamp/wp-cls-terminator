@@ -1,6 +1,6 @@
 {
   "extends": "@wordpress/stylelint-config/scss",
-  "ignoreFiles" : [
+  "ignoreFiles": [
     "**/*.js",
     "**/*.json"
   ],
