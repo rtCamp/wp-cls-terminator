@@ -1,3 +1,9 @@
 .wp-cls-margin-top-bottom-12 {
-    margin: 12px 0;
+	margin: 12px 0;
+}
+
+.wp-cls-text-help {
+	padding-top: 10px;
+	font-size: 12px;
+	color: #757575;
 }

@@ -4,7 +4,7 @@
 import { PanelBody, Button, Spinner, Notice } from '@wordpress/components';
 import { InspectorControls } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { sprintf, __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
@@ -103,7 +103,11 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 		for (const breakpoint of Object.keys(breakpoints)) {
 			try {
 				setCalculateText(
-					`Measuring embed height and width for breakpoint ${breakpoint}`
+					sprintf(
+						/* translators: %s: Device Breakpoint */
+						__('Terminating for %s', 'wp-cls'),
+						breakpoint
+					)
 				);
 				const { height, width } = await calculate(
 					html,
@@ -138,12 +142,6 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 	return (
 		<InspectorControls>
 			<PanelBody title={__('CLS Terminator Settings', 'wp-cls')}>
-				<p>
-					{__(
-						'Layout shift degrades PX, so add height to the element already.',
-						'wp-cls'
-					)}
-				</p>
 				{isTerminated && (
 					<Notice
 						className="wp-cls-margin-top-bottom-12"
@@ -181,14 +179,22 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 					text={
 						loading
 							? [
-									__('Terminating', 'wp-cls'),
+									calculateText,
 									<Spinner key={'terminator-spinner'} />,
 							  ]
 							: __('Terminate Layout Shift', 'wp-cls')
 					}
 					onClick={terminator}
 				/>
-				<p style={{ marginTop: '10px' }}>{calculateText}</p>
+				<p className="wp-cls-text-help">
+					{__(
+						'Embeds causes a layout shift when they are resized. This setting will automatically calculate the height and width of the embed and terminate the layout shift.',
+						'wp-cls'
+					)}{' '}
+					<a href="https://web.dev/optimize-cls/#embeds-and-iframes">
+						{__('Learn more', 'wp-cls')}
+					</a>
+				</p>
 			</PanelBody>
 		</InspectorControls>
 	);
