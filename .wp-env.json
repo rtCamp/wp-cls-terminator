@@ -1,12 +1,16 @@
 {
-  "core": null,
-  "phpVersion": "7.4",
   "plugins": [
     "."
   ],
   "port": 5888,
   "env": {
     "tests": {
+      "config": {
+        "WP_DEBUG": true
+      },
+      "plugins": [
+        "."
+      ],
       "port": 5889
     }
   }
