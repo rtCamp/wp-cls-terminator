@@ -1,22 +1,30 @@
 {
-  "name": "wp-cls-terminator-features",
+  "name": "wp-cls-terminator",
   "version": "1.0.0",
-  "description": "Features plugin skeleton for internal use.",
+  "description": "WordPress plugin to remove Layout Shifts from Embeds.",
   "private": true,
   "author": "rtCamp",
   "license": "GPL-2.0-or-later",
   "keywords": [
     "rtcamp",
-    "wp-plugin",
-    "feature-plugin"
+    "wp-plugin"
   ],
-  "homepage": "https://github.com/rtCamp/features-plugin-skeleton#readme",
+  "homepage": "https://github.com/rtCamp/wp-cls-terminator#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rtCamp/features-plugin-skeleton.git"
+    "url": "https://github.com/rtCamp/wp-cls-terminator.git"
   },
   "bugs": {
-    "url": "https://github.com/rtCamp/features-plugin-skeleton/issues"
+    "url": "https://github.com/rtCamp/wp-cls-terminator/issues"
+  },
+  "dependencies": {
+    "@wordpress/api-fetch": "6.12.0",
+    "@wordpress/dom-ready": "3.15.0",
+    "@wordpress/edit-post": "6.12.0",
+    "@wordpress/element": "4.13.0",
+    "@wordpress/hooks": "3.15.0",
+    "@wordpress/url": "3.16.0",
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "@babel/core": "7.18.10",
@@ -48,7 +56,6 @@
   "scripts": {
     "build:dev": "cross-env NODE_ENV=development npm-run-all 'build:!(dev|prod)'",
     "build:prod": "cross-env NODE_ENV=production npm-run-all 'build:!(dev|prod)'",
-    "build:js": "wp-scripts build",
     "lint": "npm-run-all --parallel lint:*",
     "lint:css": "wp-scripts lint-style ./assets/src",
     "lint:css:fix": "npm run lint:css -- --fix ./assets/src",
@@ -57,27 +64,14 @@
     "lint:js:report": "npm run lint:js -- --output-file lint-js-report.json --format json .",
     "lint:php": "vendor/bin/phpcs",
     "lint:php:fix": "./bin/phpcbf.sh",
-    "lint:package-json": "wp-scripts lint-pkg-json --ignorePath .gitignore",
+    "lint:pkg-json": "wp-scripts lint-pkg-json --ignorePath .gitignore",
     "lint:staged": "lint-staged",
-    "prepare": "npm run init",
     "pretest:php": "wp-env run composer 'install --no-interaction'",
-    "remove:husky": "./bin/husky.sh --remove",
-    "remove:pre-commit-hook": "./bin/pre-commit-hook.sh --remove",
-    "start:js": "wp-scripts start",
-    "start": "npm-run-all --parallel start:*",
+    "start": "wp-scripts start",
     "test": "npm-run-all --parallel test:*",
     "test:js": "wp-scripts test-unit-js --config=tests/js/jest.config.js --passWithNoTests",
     "test:js:watch": "npm run test:js -- --watch",
     "test:php": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/$(basename \"$PWD\")/phpunit.xml.dist --verbose'",
     "wp-env": "wp-env"
-  },
-  "dependencies": {
-    "@wordpress/api-fetch": "6.12.0",
-    "@wordpress/dom-ready": "3.15.0",
-    "@wordpress/edit-post": "6.12.0",
-    "@wordpress/element": "4.13.0",
-    "@wordpress/hooks": "3.15.0",
-    "@wordpress/url": "3.16.0",
-    "lodash": "4.17.21"
   }
 }
