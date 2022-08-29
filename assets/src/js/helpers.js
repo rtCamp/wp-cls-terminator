@@ -105,7 +105,7 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 				setCalculateText(
 					sprintf(
 						/* translators: %s: Device Breakpoint */
-						__('Terminating for %s', 'wp-cls'),
+						__('Terminating for %s', 'wp-cls-terminator'),
 						breakpoint
 					)
 				);
@@ -141,7 +141,9 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 
 	return (
 		<InspectorControls>
-			<PanelBody title={__('CLS Terminator Settings', 'wp-cls')}>
+			<PanelBody
+				title={__('CLS Terminator Settings', 'wp-cls-terminator')}
+			>
 				{isTerminated && (
 					<Notice
 						className="wp-cls-margin-top-bottom-12"
@@ -151,7 +153,7 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 						<p>
 							{__(
 								'Layout shift for this embed has been terminated.',
-								'wp-cls'
+								'wp-cls-terminator'
 							)}
 						</p>
 					</Notice>
@@ -165,11 +167,11 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 						<p>
 							{__(
 								'There was an error measuring the embed. Please try again.',
-								'wp-cls'
+								'wp-cls-terminator'
 							)}
 						</p>
 						<p>
-							<strong>{__('Error:', 'wp-cls')}</strong>{' '}
+							<strong>{__('Error:', 'wp-cls-terminator')}</strong>{' '}
 							{errorMessage ? errorMessage : 'Unknown error'}
 						</p>
 					</Notice>
@@ -182,17 +184,17 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 									calculateText,
 									<Spinner key={'terminator-spinner'} />,
 							  ]
-							: __('Terminate Layout Shift', 'wp-cls')
+							: __('Terminate Layout Shift', 'wp-cls-terminator')
 					}
 					onClick={terminator}
 				/>
 				<p className="wp-cls-text-help">
 					{__(
 						'Embeds causes a layout shift when they are resized. This setting will automatically calculate the height and width of the embed and terminate the layout shift.',
-						'wp-cls'
+						'wp-cls-terminator'
 					)}{' '}
 					<a href="https://web.dev/optimize-cls/#embeds-and-iframes">
-						{__('Learn more', 'wp-cls')}
+						{__('Learn more', 'wp-cls-terminator')}
 					</a>
 				</p>
 			</PanelBody>
