@@ -1,35 +1,46 @@
-import { PanelBody, Button, Spinner, Notice } from '@wordpress/components';
-import { InspectorControls } from '@wordpress/block-editor';
-import { useState } from '@wordpress/element';
-import { isFunction, isObject, isString } from 'lodash';
-import { __ } from '@wordpress/i18n';
-import { default as viewports } from './viewports';
-import { iframeMarkup } from './iframe-template';
-import apiFetch from '@wordpress/api-fetch';
-import { addQueryArgs } from '@wordpress/url';
-import { default as breakpoints } from './breakpoints';
-import '../css/block-editor.css'
+/**
+ * WordPress dependencies
+ */
+import { PanelBody, Button, Spinner, Notice } from "@wordpress/components";
+import { InspectorControls } from "@wordpress/block-editor";
+import { useState } from "@wordpress/element";
+import { __ } from "@wordpress/i18n";
+import apiFetch from "@wordpress/api-fetch";
+import { addQueryArgs } from "@wordpress/url";
 
-export const filterBlocksAttrs = ( settings, name ) => {
-    if ( ! isObject( settings ) || ! isString( name ) ) {
+/**
+ * External dependencies
+ */
+import { isFunction, isObject, isString } from "lodash";
+
+/**
+ * Internal dependencies
+ */
+import { default as viewports } from "./viewports";
+import { iframeMarkup } from "./iframe-template";
+import { default as breakpoints } from "./breakpoints";
+import "../css/block-editor.css";
+
+export const filterBlocksAttrs = (settings, name) => {
+	if (!isObject(settings) || !isString(name)) {
 		return settings;
 	}
 
-    if ( 'core/embed' !== name ){
-        return settings;
-    }
+	if ("core/embed" !== name) {
+		return settings;
+	}
 
-    if ( ! settings.attributes ) {
-        settings.attributes = {};
-    }
+	if (!settings.attributes) {
+		settings.attributes = {};
+	}
 
-    settings.attributes.embedHeightWidth = {
-        type: 'object',
-        default: {},
-    };
+	settings.attributes.embedHeightWidth = {
+		type: "object",
+		default: {},
+	};
 
-    return settings;
-}
+	return settings;
+};
 
 /**
  * Filters blocks edit function of all blocks.
@@ -37,144 +48,179 @@ export const filterBlocksAttrs = ( settings, name ) => {
  * @param {Function} BlockEdit function.
  * @return {Function} Edit function.
  */
-export const filterBlocksEdit = ( BlockEdit ) => {
-	if ( ! isFunction( BlockEdit ) ) {
+export const filterBlocksEdit = (BlockEdit) => {
+	if (!isFunction(BlockEdit)) {
 		return BlockEdit;
 	}
 
-	const EnhancedBlockEdit = ( props ) => {
+	const EnhancedBlockEdit = (props) => {
 		const { isSelected, name } = props;
 
-		if ( isSelected && 'core/embed' === name ) {
+		if (isSelected && "core/embed" === name) {
 			return (
 				<>
-					<BlockEdit { ...props } />
-					<CLSTerminatorButton { ...props } />
+					<BlockEdit {...props} />
+					<CLSTerminatorButton {...props} />
 				</>
 			);
 		}
 
-		return <BlockEdit { ...props } />;
+		return <BlockEdit {...props} />;
 	};
 
 	return EnhancedBlockEdit;
 };
 
+const CLSTerminatorButton = ({ attributes, setAttributes }) => {
+	const [loading, setLoading] = useState(false);
+	const [calculateText, setCalculateText] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
+	const [isTerminated, setIsTerminated] = useState(
+		Object.keys(attributes.embedHeightWidth).length !== 0 ? true : false
+	);
+	const [isMeasurementError, setIsMeasurementError] = useState(false);
 
-const CLSTerminatorButton = ( { attributes, setAttributes } ) => {
-    const [ loading, setLoading ] = useState( false );
-    const [ calculateText, setCalculateText ] = useState( '' );
-    const [ errorMessage, setErrorMessage ] = useState( '' );
-    const [ isTerminated, setIsTerminated ] = useState( Object.keys(attributes.embedHeightWidth).length !== 0 ? true : false );
-    const [ isMeasurementError, setIsMeasurementError ] = useState( false );
-    
 	const terminator = async () => {
-        setLoading( true );
-        setIsTerminated( false );
+		setLoading(true);
+		setIsTerminated(false);
 
-        const results = {};
+		const results = {};
 
-        const { html } =  await apiFetch( {
-            path: addQueryArgs( '/oembed/1.0/proxy', { url: attributes.url } ),
-        } );
+		const { html } = await apiFetch({
+			path: addQueryArgs("/oembed/1.0/proxy", { url: attributes.url }),
+		});
 
-        // for ( const viewport of viewports ) {
-        //     setCalculateText( `Measuring embed height and width for viewport ${viewport.height}x${viewport.width}` );
-        //     const { height, width } = await calculate( html, viewport );
-        //     results.push( { height, width } );
+		// for ( const viewport of viewports ) {
+		//     setCalculateText( `Measuring embed height and width for viewport ${viewport.height}x${viewport.width}` );
+		//     const { height, width } = await calculate( html, viewport );
+		//     results.push( { height, width } );
 
-        //     if ( document.getElementById( 'optimized-preview' ) ) {
-        //         document.getElementById( 'optimized-preview' ).remove();
-        //     }
-        // }
+		//     if ( document.getElementById( 'optimized-preview' ) ) {
+		//         document.getElementById( 'optimized-preview' ).remove();
+		//     }
+		// }
 
-        for ( const breakpoint of Object.keys( breakpoints ) ) {
-            try {
-                setCalculateText( `Measuring embed height and width for breakpoint ${breakpoint}` );
-                const { height, width } = await calculate( html, breakpoints[ breakpoint ] );
-                results[ breakpoint ] = { height, width };
-            } catch ( error ) {
-                setIsTerminated( false );
-                setErrorMessage( error );
-                setIsMeasurementError( true );
-                break;
-            } finally {
-                if ( document.getElementById( 'optimized-preview' ) ) {
-                    document.getElementById( 'optimized-preview' ).remove();
-                }
-            }
-        }
+		for (const breakpoint of Object.keys(breakpoints)) {
+			try {
+				setCalculateText(
+					`Measuring embed height and width for breakpoint ${breakpoint}`
+				);
+				const { height, width } = await calculate(
+					html,
+					breakpoints[breakpoint]
+				);
+				results[breakpoint] = { height, width };
+			} catch (error) {
+				setIsTerminated(false);
+				setErrorMessage(error);
+				setIsMeasurementError(true);
+				break;
+			} finally {
+				if (document.getElementById("optimized-preview")) {
+					document.getElementById("optimized-preview").remove();
+				}
+			}
+		}
 
-        setLoading( false );
-        setCalculateText( '' );
+		setLoading(false);
+		setCalculateText("");
 
-        setAttributes( {
-            embedHeightWidth: results,
-        } );
+		setAttributes({
+			embedHeightWidth: results,
+		});
 
-        setIsTerminated( true );
-    }
+		setIsTerminated(true);
+	};
 
 	return (
 		<InspectorControls>
-			<PanelBody title={ __( 'CLS Terminator Settings', 'wp-cls' ) }>
-                <p>{ __( 'Layout shift degrades PX, so add height to the element already.', 'wp-cls' ) }</p>
-                {
-                    isTerminated && (
-                        <Notice className='wp-cls-margin-top-bottom-12' status="success" isDismissible={ false }>
-                            <p>{ __( 'CLS Terminator is already activated for this embed.', 'wp-cls' ) }</p>
-                        </Notice>
-                    )
-                }
-                {
-                    isMeasurementError && (
-                        <Notice className='wp-cls-margin-top-bottom-12' status="error" isDismissible={ false }>
-                            <p>{ __( 'There was an error measuring the embed. Please try again.', 'wp-cls' ) }</p>
-                        </Notice>
-                    )
-                }
+			<PanelBody title={__("CLS Terminator Settings", "wp-cls")}>
+				<p>
+					{__(
+						"Layout shift degrades PX, so add height to the element already.",
+						"wp-cls"
+					)}
+				</p>
+				{isTerminated && (
+					<Notice
+						className="wp-cls-margin-top-bottom-12"
+						status="success"
+						isDismissible={false}
+					>
+						<p>
+							{__(
+								"CLS Terminator is already activated for this embed.",
+								"wp-cls"
+							)}
+						</p>
+					</Notice>
+				)}
+				{isMeasurementError && (
+					<Notice
+						className="wp-cls-margin-top-bottom-12"
+						status="error"
+						isDismissible={false}
+					>
+						<p>
+							{__(
+								"There was an error measuring the embed. Please try again.",
+								"wp-cls"
+							)}
+						</p>
+					</Notice>
+				)}
 				<Button
-                    variant='primary'
-                    text={ loading ? [__( 'Terminating', 'wp-cls' ), <Spinner key={ 'terminator-spinner' } />] : __( 'Terminate Layout Shift', 'wp-cls' ) }
-                    onClick={ terminator } 
-                />
-                    <p style={ { marginTop: '10px' } }>{ calculateText }</p>
-            </PanelBody>
+					variant="primary"
+					text={
+						loading
+							? [
+									__("Terminating", "wp-cls"),
+									<Spinner key={"terminator-spinner"} />,
+							  ]
+							: __("Terminate Layout Shift", "wp-cls")
+					}
+					onClick={terminator}
+				/>
+				<p style={{ marginTop: "10px" }}>{calculateText}</p>
+			</PanelBody>
 		</InspectorControls>
 	);
-}
+};
 
-const calculate = ( html, breakpoint ) => {
-    const viewportMeasureIframe = document.createElement( 'iframe' );
-    const markup = iframeMarkup( html );
-    const name = 'embed-height-calculator';
+const calculate = (html, breakpoint) => {
+	const viewportMeasureIframe = document.createElement("iframe");
+	const markup = iframeMarkup(html);
+	const name = "embed-height-calculator";
 
-    viewportMeasureIframe.id = 'optimized-preview';
-    viewportMeasureIframe.src = 'about:blank';
-    viewportMeasureIframe.width = breakpoint;
-    viewportMeasureIframe.height = '100%';
+	viewportMeasureIframe.id = "optimized-preview";
+	viewportMeasureIframe.src = "about:blank";
+	viewportMeasureIframe.width = breakpoint;
+	viewportMeasureIframe.height = "100%";
 
-    if ( ! document.getElementById( 'optimized-preview' ) ) {
-        document.body.appendChild( viewportMeasureIframe );
-    }
+	if (!document.getElementById("optimized-preview")) {
+		document.body.appendChild(viewportMeasureIframe);
+	}
 
-    return new Promise( ( resolve, reject ) => {
-        window.addEventListener(
-            'message',
-            ( event ) => {
-                if ( event.source === viewportMeasureIframe.contentWindow && event.data.name === name ) {
-                    resolve( event.data );
-                }
-            },
-            { once: true },
-        );
+	return new Promise((resolve, reject) => {
+		window.addEventListener(
+			"message",
+			(event) => {
+				if (
+					event.source === viewportMeasureIframe.contentWindow &&
+					event.data.name === name
+				) {
+					resolve(event.data);
+				}
+			},
+			{ once: true }
+		);
 
-        viewportMeasureIframe.contentWindow.document.open();
-        viewportMeasureIframe.contentWindow.document.write( markup );
-        viewportMeasureIframe.contentWindow.document.close();
+		viewportMeasureIframe.contentWindow.document.open();
+		viewportMeasureIframe.contentWindow.document.write(markup);
+		viewportMeasureIframe.contentWindow.document.close();
 
-        setTimeout( () => {
-            reject( new Error( 'Embed measurement timed out' ) );
-        }, 10000 );
-    } );
-}
+		setTimeout(() => {
+			reject(new Error("Embed measurement timed out"));
+		}, 10000);
+	});
+};
