@@ -4,7 +4,7 @@
 import { PanelBody, Button, Spinner, Notice } from '@wordpress/components';
 import { InspectorControls } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { sprintf, __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 
@@ -95,15 +95,19 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 		//     const { height, width } = await calculate( html, viewport );
 		//     results.push( { height, width } );
 
-		//     if ( document.getElementById( 'optimized-preview' ) ) {
-		//         document.getElementById( 'optimized-preview' ).remove();
+		//     if ( document.getElementById( 'wp-cls-optimized-preview' ) ) {
+		//         document.getElementById( 'wp-cls-optimized-preview' ).remove();
 		//     }
 		// }
 
 		for (const breakpoint of Object.keys(breakpoints)) {
 			try {
 				setCalculateText(
-					`Measuring embed height and width for breakpoint ${breakpoint}`
+					sprintf(
+						/* translators: %s: Device Breakpoint */
+						__('Terminating for %s', 'wp-cls'),
+						breakpoint
+					)
 				);
 				const { height, width } = await calculate(
 					html,
@@ -112,12 +116,15 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 				results[breakpoint] = { height, width };
 			} catch (error) {
 				setIsTerminated(false);
-				setErrorMessage(error);
+				setErrorMessage(error.message);
 				setIsMeasurementError(true);
 				break;
 			} finally {
-				if (document.getElementById('optimized-preview')) {
-					document.getElementById('optimized-preview').remove();
+				const iframeElm = document.getElementById(
+					'wp-cls-optimized-preview'
+				);
+				if (iframeElm) {
+					iframeElm.remove();
 				}
 			}
 		}
@@ -135,12 +142,6 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 	return (
 		<InspectorControls>
 			<PanelBody title={__('CLS Terminator Settings', 'wp-cls')}>
-				<p>
-					{__(
-						'Layout shift degrades PX, so add height to the element already.',
-						'wp-cls'
-					)}
-				</p>
 				{isTerminated && (
 					<Notice
 						className="wp-cls-margin-top-bottom-12"
@@ -149,7 +150,7 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 					>
 						<p>
 							{__(
-								'CLS Terminator is already activated for this embed.',
+								'Layout shift for this embed has been terminated.',
 								'wp-cls'
 							)}
 						</p>
@@ -166,8 +167,10 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 								'There was an error measuring the embed. Please try again.',
 								'wp-cls'
 							)}
+						</p>
+						<p>
 							<strong>{__('Error:', 'wp-cls')}</strong>{' '}
-							{errorMessage}
+							{errorMessage ? errorMessage : 'Unknown error'}
 						</p>
 					</Notice>
 				)}
@@ -176,14 +179,22 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 					text={
 						loading
 							? [
-									__('Terminating', 'wp-cls'),
+									calculateText,
 									<Spinner key={'terminator-spinner'} />,
 							  ]
 							: __('Terminate Layout Shift', 'wp-cls')
 					}
 					onClick={terminator}
 				/>
-				<p style={{ marginTop: '10px' }}>{calculateText}</p>
+				<p className="wp-cls-text-help">
+					{__(
+						'Embeds causes a layout shift when they are resized. This setting will automatically calculate the height and width of the embed and terminate the layout shift.',
+						'wp-cls'
+					)}{' '}
+					<a href="https://web.dev/optimize-cls/#embeds-and-iframes">
+						{__('Learn more', 'wp-cls')}
+					</a>
+				</p>
 			</PanelBody>
 		</InspectorControls>
 	);
@@ -194,12 +205,12 @@ const calculate = (html, breakpoint) => {
 	const markup = iframeMarkup(html);
 	const name = 'embed-height-calculator';
 
-	viewportMeasureIframe.id = 'optimized-preview';
+	viewportMeasureIframe.id = 'wp-cls-optimized-preview';
 	viewportMeasureIframe.src = 'about:blank';
 	viewportMeasureIframe.width = breakpoint;
 	viewportMeasureIframe.height = '100%';
 
-	if (!document.getElementById('optimized-preview')) {
+	if (!document.getElementById('wp-cls-optimized-preview')) {
 		document.body.appendChild(viewportMeasureIframe);
 	}
 
