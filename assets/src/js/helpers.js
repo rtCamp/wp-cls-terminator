@@ -95,8 +95,8 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 		//     const { height, width } = await calculate( html, viewport );
 		//     results.push( { height, width } );
 
-		//     if ( document.getElementById( 'optimized-preview' ) ) {
-		//         document.getElementById( 'optimized-preview' ).remove();
+		//     if ( document.getElementById( 'wp-cls-optimized-preview' ) ) {
+		//         document.getElementById( 'wp-cls-optimized-preview' ).remove();
 		//     }
 		// }
 
@@ -112,12 +112,15 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 				results[breakpoint] = { height, width };
 			} catch (error) {
 				setIsTerminated(false);
-				setErrorMessage(error);
+				setErrorMessage(error.message);
 				setIsMeasurementError(true);
 				break;
 			} finally {
-				if (document.getElementById('optimized-preview')) {
-					document.getElementById('optimized-preview').remove();
+				const iframeElm = document.getElementById(
+					'wp-cls-optimized-preview'
+				);
+				if (iframeElm) {
+					iframeElm.remove();
 				}
 			}
 		}
@@ -149,7 +152,7 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 					>
 						<p>
 							{__(
-								'CLS Terminator is already activated for this embed.',
+								'Layout shift for this embed has been terminated.',
 								'wp-cls'
 							)}
 						</p>
@@ -166,8 +169,10 @@ const CLSTerminatorButton = ({ attributes, setAttributes }) => {
 								'There was an error measuring the embed. Please try again.',
 								'wp-cls'
 							)}
+						</p>
+						<p>
 							<strong>{__('Error:', 'wp-cls')}</strong>{' '}
-							{errorMessage}
+							{errorMessage ? errorMessage : 'Unknown error'}
 						</p>
 					</Notice>
 				)}
@@ -194,12 +199,12 @@ const calculate = (html, breakpoint) => {
 	const markup = iframeMarkup(html);
 	const name = 'embed-height-calculator';
 
-	viewportMeasureIframe.id = 'optimized-preview';
+	viewportMeasureIframe.id = 'wp-cls-optimized-preview';
 	viewportMeasureIframe.src = 'about:blank';
 	viewportMeasureIframe.width = breakpoint;
 	viewportMeasureIframe.height = '100%';
 
-	if (!document.getElementById('optimized-preview')) {
+	if (!document.getElementById('wp-cls-optimized-preview')) {
 		document.body.appendChild(viewportMeasureIframe);
 	}
 
