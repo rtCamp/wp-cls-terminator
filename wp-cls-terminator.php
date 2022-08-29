@@ -16,7 +16,11 @@
 define( 'WP_CLS_TERMINATOR_PATH', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'WP_CLS_TERMINATOR_URL', untrailingslashit( plugin_dir_url( __FILE__ ) ) );
 
+require_once WP_CLS_TERMINATOR_PATH . '/includes/class-cls-terminator.php';
 require_once WP_CLS_TERMINATOR_PATH . '/includes/class-asset.php';
 
-$assets = new WP_CLS_Terminator\Assets();
+$cls_terminator = new WP_CLS_Terminator\CLS_Terminator();
+$cls_terminator->init();
+
+$assets = new WP_CLS_Terminator\Asset();
 $assets->init();
