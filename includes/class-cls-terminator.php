@@ -52,10 +52,10 @@ class CLS_Terminator {
 
 		foreach ( $block['attrs']['embedHeightWidth'] as $breakpoint => $dimensions ) {
 			$css .= sprintf(
-				"\n\t@media (min-width: %spx) {\n\t\t.{$class_name} { min-height: %spx; }\n\t}\n",
+				"\n\t@media (min-width: %dpx) {\n\t\t.{$class_name} { min-height: %dpx; }\n\t}\n",
 				$device_breakpoints[ $breakpoint ],
-				$dimensions['height'],
-				$dimensions['width']
+				(int) $dimensions['height'],
+				(int) $dimensions['width']
 			);
 		}
 
