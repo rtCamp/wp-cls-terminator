@@ -16,7 +16,7 @@ class CLS_Terminator {
 		 * Init
 		 */
 	public function init() {
-		add_filter( 'render_block', [ $this, 'filter_rendered_block' ], 0, 2 );
+		add_filter( 'render_block', array( $this, 'filter_rendered_block' ), 0, 2 );
 	}
 
 	/**
@@ -39,12 +39,12 @@ class CLS_Terminator {
 			return $block_content;
 		}
 
-		$device_breakpoints = [
+		$device_breakpoints = array(
 			'desktop' => 1920,
 			'laptop'  => 1280,
 			'tablet'  => 768,
 			'mobile'  => 375,
-		];
+		);
 
 		$class_name = sprintf( 'cls-terminator-%s', md5( $block['attrs']['url'] ) );
 
