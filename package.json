@@ -32,7 +32,7 @@
     "@wordpress/browserslist-config": "5.0.0",
     "@wordpress/env": "5.2.0",
     "@wordpress/eslint-plugin": "13.0.0",
-    "@wordpress/jest-preset-default": "9.0.0",
+    "@wordpress/jest-preset-default": "12.37.0",
     "@wordpress/prettier-config": "2.0.0",
     "@wordpress/scripts": "24.0.0",
     "cross-env": "7.0.3",
