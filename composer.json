@@ -7,7 +7,7 @@
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "automattic/vipwpcs": "^2.3",
     "phpunit/phpunit": "^9.5",
-    "wp-phpunit/wp-phpunit": "^5.9",
+    "wp-phpunit/wp-phpunit": "^6.9",
     "yoast/phpunit-polyfills": "^4.0"
   },
   "config": {
