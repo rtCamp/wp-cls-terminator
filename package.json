@@ -27,7 +27,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
-    "@babel/core": "7.18.13",
+    "@babel/core": "7.28.6",
     "@wordpress/babel-preset-default": "7.0.0",
     "@wordpress/browserslist-config": "5.0.0",
     "@wordpress/env": "5.2.0",
