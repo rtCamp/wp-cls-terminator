@@ -6,7 +6,7 @@
     "wp-coding-standards/wpcs": "^2.3",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "automattic/vipwpcs": "^2.3",
-    "phpunit/phpunit": "^9.5",
+    "phpunit/phpunit": "^12.5",
     "wp-phpunit/wp-phpunit": "^5.9",
     "yoast/phpunit-polyfills": "^4.0"
   },
