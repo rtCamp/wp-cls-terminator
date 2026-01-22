@@ -24,7 +24,7 @@
     "@wordpress/element": "6.37.0",
     "@wordpress/i18n": "4.16.0",
     "@wordpress/url": "3.17.0",
-    "lodash": "4.17.21"
+    "lodash": "4.17.23"
   },
   "devDependencies": {
     "@babel/core": "7.28.6",
